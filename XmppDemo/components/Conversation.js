@@ -20,9 +20,8 @@ export default class Conversation extends React.Component {
         Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
         Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
         this.mounted = true;
-        xmpp.login({local:xmpp.local, remote:xmpp.remote});
     }
-    
+
     componentWillUnmount(){
         this.mounted = false;
         Keyboard.removeListener('keyboardWillShow');
@@ -31,11 +30,11 @@ export default class Conversation extends React.Component {
     keyboardWillShow (e) {
         if (this.mounted) this.setState({height: e.endCoordinates.height});
     }
-    
+
     keyboardWillHide (e) {
         if (this.mounted) this.setState({height: 0});
     }
-    
+
     render(){
         const dataSource = ds.cloneWithRows(xmpp.conversation.map(x=>x));
         return (

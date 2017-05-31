@@ -1,6 +1,6 @@
 import XMPP from 'react-native-xmpp';
-const DOMAIN = "jabber.hot-chilli.net";
-const SCHEMA = "ios";
+const DOMAIN = "ec2-54-169-206-26.ap-southeast-1.compute.amazonaws.com";
+const SCHEMA = "XmppDemo";
 import {observable} from 'mobx';
 import autobind from 'autobind'
 @autobind
@@ -10,18 +10,19 @@ class XmppStore {
     @observable loginError = null;
     @observable error = null;
     @observable conversation = [];
-    
+
     constructor() {
         XMPP.on('loginError', this.onLoginError);
         XMPP.on('error', this.onError);
         XMPP.on('disconnect', this.onDisconnect);
         XMPP.on('login', this.onLogin);
         XMPP.on('message', this.onReceiveMessage);
+        XMPP.trustHosts([DOMAIN]);
         // default values
-        this.local = 'rntestuser1';
-        this.remote = 'rntestuser2';
+        this.local = 'testuser2';
+        this.remote = 'testuser3';
     }
-    
+
     _userForName(name){
         return name + '@' + DOMAIN + "/" + SCHEMA;
     }
@@ -74,8 +75,9 @@ class XmppStore {
         this.logged = true;
     }
 
-    login({local, remote}){
+    login({local, localPwd, remote}){
         this.local = local;
+        this.localPwd = localPwd;
         this.remote = remote;
         if (!local || !local.trim()){
             this.loginError = "Local username should not be empty";
@@ -87,7 +89,7 @@ class XmppStore {
             this.loginError = null;
 
             // try to login to test domain with the same password as username
-            XMPP.connect(this._userForName(this.local),this.local);
+            XMPP.connect(this._userForName(this.local),this.localPwd);
             this.loading = true;
         }
 
