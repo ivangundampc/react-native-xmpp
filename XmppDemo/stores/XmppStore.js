@@ -19,7 +19,8 @@ class XmppStore {
         XMPP.on('message', this.onReceiveMessage);
         XMPP.trustHosts([DOMAIN]);
         // default values
-        this.local = 'testuser2';
+        this.local = 'testuser1';
+        this.localPwd = 'test1';
         this.remote = 'testuser3';
     }
 
@@ -80,7 +81,15 @@ class XmppStore {
         this.localPwd = localPwd;
         this.remote = remote;
         if (!local || !local.trim()){
-            this.loginError = "Local username should not be empty";
+            //this.loginError = "Local username should not be empty";
+            this.local = 'testuser1';
+            this.localPwd = 'test1';
+            this.remote = 'testuser3';
+
+            this.loginError = null;
+
+            XMPP.connect(this._userForName(this.local),this.localPwd);
+            this.loading = true;
         } else if (!remote || !remote.trim()){
             this.loginError = "Remote username should not be empty";
         } else if (local==remote){
